@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import React, { useState } from "react";
+import { TextField, Button, Box, Typography } from "@mui/material";
 
 interface Round {
   pounceRight: number;
@@ -8,6 +8,7 @@ interface Round {
   directWrong: number;
   bonusRight: number;
   bonusWrong: number;
+  numberOfQuestions: number;
 }
 
 interface RoundSetupProps {
@@ -19,9 +20,10 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
     pounceRight: 10,
     pounceWrong: -5,
     directRight: 10,
-    directWrong:0 ,
+    directWrong: 0,
     bonusRight: 5,
     bonusWrong: 0,
+    numberOfQuestions: 0,
   });
 
   const handleSubmit = () => {
@@ -35,7 +37,9 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
         label="Pounce Right"
         type="number"
         value={roundData.pounceRight}
-        onChange={(e) => setRoundData({ ...roundData, pounceRight: Number(e.target.value) })}
+        onChange={(e) =>
+          setRoundData({ ...roundData, pounceRight: Number(e.target.value) })
+        }
         fullWidth
         margin="normal"
       />
@@ -43,7 +47,9 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
         label="Pounce Wrong"
         type="number"
         value={roundData.pounceWrong}
-        onChange={(e) => setRoundData({ ...roundData, pounceWrong: Number(e.target.value) })}
+        onChange={(e) =>
+          setRoundData({ ...roundData, pounceWrong: Number(e.target.value) })
+        }
         fullWidth
         margin="normal"
       />
@@ -51,7 +57,9 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
         label="Direct Right"
         type="number"
         value={roundData.directRight}
-        onChange={(e) => setRoundData({ ...roundData, directRight: Number(e.target.value) })}
+        onChange={(e) =>
+          setRoundData({ ...roundData, directRight: Number(e.target.value) })
+        }
         fullWidth
         margin="normal"
       />
@@ -59,7 +67,9 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
         label="Direct Wrong"
         type="number"
         value={roundData.directWrong}
-        onChange={(e) => setRoundData({ ...roundData, directWrong: Number(e.target.value) })}
+        onChange={(e) =>
+          setRoundData({ ...roundData, directWrong: Number(e.target.value) })
+        }
         fullWidth
         margin="normal"
       />
@@ -67,7 +77,9 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
         label="Bonus Right"
         type="number"
         value={roundData.bonusRight}
-        onChange={(e) => setRoundData({ ...roundData, bonusRight: Number(e.target.value) })}
+        onChange={(e) =>
+          setRoundData({ ...roundData, bonusRight: Number(e.target.value) })
+        }
         fullWidth
         margin="normal"
       />
@@ -75,7 +87,22 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
         label="Bonus Wrong"
         type="number"
         value={roundData.bonusWrong}
-        onChange={(e) => setRoundData({ ...roundData, bonusWrong: Number(e.target.value) })}
+        onChange={(e) =>
+          setRoundData({ ...roundData, bonusWrong: Number(e.target.value) })
+        }
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="No of questions"
+        type="number"
+        value={roundData.numberOfQuestions}
+        onChange={(e) =>
+          setRoundData({
+            ...roundData,
+            numberOfQuestions: Number(e.target.value),
+          })
+        }
         fullWidth
         margin="normal"
       />

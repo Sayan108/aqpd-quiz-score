@@ -10,9 +10,9 @@ import {
 import QuizDataGrid from "./components/QuizDataGrid";
 import StandingsChart from "./components/standingsChart";
 
-interface Team {
+export interface Team {
   name: string;
-  score: number;
+  score: number[];
 }
 
 interface Round {
@@ -22,6 +22,7 @@ interface Round {
   directWrong: number;
   bonusRight: number;
   bonusWrong: number;
+  numberOfQuestions: number;
 }
 
 const App: React.FC = () => {
@@ -30,6 +31,7 @@ const App: React.FC = () => {
   const [rounds, setRounds] = useState<Round[]>([]);
   const [currentRound, setCurrentRound] = useState<Round | null>(null);
   const [showChart, setshowChart] = useState(false);
+  const [totalScores, setTotalScores] = useState(teams.map(() => 0));
 
   // Fetch from local storage
   useEffect(() => {
@@ -41,7 +43,7 @@ const App: React.FC = () => {
     setQuizName(name);
     const initializedTeams = teamNames.map((team) => ({
       name: team,
-      score: 0,
+      score: [],
     }));
     setTeams(initializedTeams);
   };
@@ -54,16 +56,26 @@ const App: React.FC = () => {
 
   const handleUpdateScore = (teamIndex: number, score: number) => {
     const updatedTeams = teams.map((team, index) =>
-      index === teamIndex ? { ...team, score: team.score + score } : team
+      index === teamIndex ? { ...team, score: [...team.score, score] } : team
     );
     setTeams(updatedTeams);
   };
 
   const handleResetScores = () => {
-    const resetTeams = teams.map((team) => ({ ...team, score: 0 }));
+    const resetTeams = teams.map((team) => ({ ...team, score: [] }));
     setTeams(resetTeams);
   };
-
+  const toggleFullScreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(
+          `Error attempting to enable full-screen mode: ${err.message}`
+        );
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
   return (
     <Box sx={{ p: 2 }}>
       {!quizName ? (
@@ -71,14 +83,17 @@ const App: React.FC = () => {
       ) : !currentRound ? (
         <RoundSetup onSetup={handleRoundSetup} />
       ) : showChart ? (
-        <StandingsChart teams={teams} />
+        <StandingsChart teams={teams} totalScores={totalScores} />
       ) : (
         <>
           <Typography variant="h4">{quizName}</Typography>
           <QuizDataGrid
+            numberOfQuestions={teams?.length}
             teams={teams}
             currentRound={currentRound}
             onUpdateScore={handleUpdateScore}
+            totalScores={totalScores}
+            setTotalScores={setTotalScores}
           />
           <Stack
             direction={"row"}
@@ -97,6 +112,13 @@ const App: React.FC = () => {
               onClick={() => setshowChart(true)}
             >
               Show Standings
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={toggleFullScreen}
+            >
+              Full Screen
             </Button>
           </Stack>
         </>
