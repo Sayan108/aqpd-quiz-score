@@ -2,7 +2,7 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface StandingsChartProps {
-  teams: { name: string; score: number[] }[];
+  teams: string[];
   totalScores: number[];
 }
 
@@ -22,7 +22,7 @@ const StandingsChart: React.FC<StandingsChartProps> = ({
         type: "rangeBar" as const,
       },
       xaxis: {
-        categories: teams.map((team) => team.name),
+        categories: teams,
       },
     },
   };

@@ -9,13 +9,16 @@ import {
 } from "./components/storageHelper";
 import QuizDataGrid from "./components/QuizDataGrid";
 import StandingsChart from "./components/standingsChart";
+import DataGridWithDynamicMarks, {
+  ParticipantData,
+} from "./components/dataGridCustom";
 
 export interface Team {
   name: string;
   score: number[];
 }
 
-interface Round {
+export interface Round {
   pounceRight: number;
   pounceWrong: number;
   directRight: number;
@@ -33,6 +36,10 @@ const App: React.FC = () => {
   const [showChart, setshowChart] = useState(false);
   const [totalScores, setTotalScores] = useState(teams.map(() => 0));
 
+  const [teamAndScoreDetails, setTeamAndScoreDetails] = useState<
+    ParticipantData[]
+  >([]);
+
   // Fetch from local storage
   useEffect(() => {
     const savedRounds = getFromLocalStorage("rounds");
@@ -41,11 +48,13 @@ const App: React.FC = () => {
 
   const handleQuizSetup = (name: string, teamNames: string[]) => {
     setQuizName(name);
-    const initializedTeams = teamNames.map((team) => ({
+    const initializedTeams = teamNames.map((team, index) => ({
+      id: index,
       name: team,
-      score: [],
+      marksString: "",
+      totalMarks: 0,
     }));
-    setTeams(initializedTeams);
+    setTeamAndScoreDetails(initializedTeams);
   };
 
   const handleRoundSetup = (round: Round) => {
@@ -83,17 +92,28 @@ const App: React.FC = () => {
       ) : !currentRound ? (
         <RoundSetup onSetup={handleRoundSetup} />
       ) : showChart ? (
-        <StandingsChart teams={teams} totalScores={totalScores} />
+        <StandingsChart
+          teams={teamAndScoreDetails?.map(
+            (item: ParticipantData) => item?.name
+          )}
+          totalScores={teamAndScoreDetails?.map(
+            (item: ParticipantData) => item?.totalMarks
+          )}
+        />
       ) : (
         <>
           <Typography variant="h4">{quizName}</Typography>
-          <QuizDataGrid
+          {/* <QuizDataGrid
             numberOfQuestions={teams?.length}
             teams={teams}
             currentRound={currentRound}
             onUpdateScore={handleUpdateScore}
             totalScores={totalScores}
             setTotalScores={setTotalScores}
+          /> */}
+          <DataGridWithDynamicMarks
+            participants={teamAndScoreDetails}
+            setParticipants={setTeamAndScoreDetails}
           />
           <Stack
             direction={"row"}
