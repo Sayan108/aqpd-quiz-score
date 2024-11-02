@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { Button, Typography, Box } from "@mui/material";
+import { Round } from "../App";
 
 export interface ParticipantData {
   id: number;
@@ -9,20 +10,14 @@ export interface ParticipantData {
   totalMarks: number;
 }
 
-const initialParticipants: ParticipantData[] = [
-  { id: 1, name: "Alice", marksString: "10+5", totalMarks: 15 },
-  { id: 2, name: "Bob", marksString: "10+10", totalMarks: 20 },
-  { id: 3, name: "Charlie", marksString: "5+5", totalMarks: 10 },
-];
-
-const markingOptions = ["+5", "-5", "+10", "-10", "+15", "-15"];
-
 const DataGridWithDynamicMarks = ({
   participants,
   setParticipants,
+  roundData,
 }: {
   participants: ParticipantData[];
   setParticipants: any;
+  roundData: Round;
 }) => {
   // const [participants, setParticipants] = useState(initialParticipants);
 
@@ -36,11 +31,19 @@ const DataGridWithDynamicMarks = ({
   };
 
   // Function to handle marks update
-  const handleMarksUpdate = (id: number, operation: string) => {
+  type RoundDataKeys = keyof typeof roundData;
+
+  const handleMarksUpdate = (id: number, operation: RoundDataKeys) => {
+    console.log(roundData[operation]);
+
     setParticipants((prev: ParticipantData[]) =>
       prev.map((participant: ParticipantData) => {
         if (participant.id === id) {
-          const updatedMarks = `${participant?.marksString}${operation}`;
+          const updatedMarks = `${participant.marksString}${
+            roundData[operation] > 0
+              ? `+${roundData[operation]}`
+              : roundData[operation]
+          }`;
           const updatedTotal = calculateTotal(updatedMarks);
           return {
             ...participant,
@@ -52,6 +55,8 @@ const DataGridWithDynamicMarks = ({
       })
     );
   };
+
+  const markingOptions = Object.keys(roundData) as RoundDataKeys[];
 
   const columns: GridColDef[] = [
     { field: "name", headerName: "Name", flex: 1, width: 100 },
@@ -68,16 +73,18 @@ const DataGridWithDynamicMarks = ({
             {params.value}
           </Typography>
           <Box display="flex" justifyContent="space-between" mt={1}>
-            {markingOptions.map((option) => (
-              <Button
-                key={option}
-                size="small"
-                variant="outlined"
-                onClick={() => handleMarksUpdate(params.row.id, option)}
-              >
-                {option}
-              </Button>
-            ))}
+            {markingOptions?.map((option) =>
+              roundData[option] ? (
+                <Button
+                  key={option}
+                  size="small"
+                  variant="outlined"
+                  onClick={() => handleMarksUpdate(params.row.id, option)}
+                >
+                  {option}
+                </Button>
+              ) : null
+            )}
           </Box>
         </Box>
       ),
@@ -94,7 +101,7 @@ const DataGridWithDynamicMarks = ({
   };
 
   return (
-    <Box sx={{ height: 400, width: "100%" }}>
+    <Box sx={{ height: "95vh", width: "100%" }}>
       <DataGrid
         rows={participants}
         columns={columns}

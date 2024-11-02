@@ -99,6 +99,7 @@ const App: React.FC = () => {
           totalScores={teamAndScoreDetails?.map(
             (item: ParticipantData) => item?.totalMarks
           )}
+          setShowChart={setshowChart}
         />
       ) : (
         <>
@@ -114,10 +115,15 @@ const App: React.FC = () => {
           <DataGridWithDynamicMarks
             participants={teamAndScoreDetails}
             setParticipants={setTeamAndScoreDetails}
+            roundData={rounds[0]}
           />
           <Stack
             direction={"row"}
-            sx={{ display: "flex", justifyContent: "space-between" }}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: 10,
+            }}
           >
             <Button
               variant="contained"

@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
-
-interface Round {
-  pounceRight: number;
-  pounceWrong: number;
-  directRight: number;
-  directWrong: number;
-  bonusRight: number;
-  bonusWrong: number;
-  numberOfQuestions: number;
-}
+import { Round } from "../App";
 
 interface RoundSetupProps {
   onSetup: (round: Round) => void;
@@ -31,7 +22,7 @@ const RoundSetup: React.FC<RoundSetupProps> = ({ onSetup }) => {
   };
 
   return (
-    <Box>
+    <Box sx={{ justifyContent: "center" }}>
       <Typography variant="h5">Round Setup</Typography>
       <TextField
         label="Pounce Right"

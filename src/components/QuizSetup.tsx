@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import React, { useState } from "react";
+import { TextField, Button, Box, Typography } from "@mui/material";
 
 interface QuizSetupProps {
   onSetup: (quizName: string, teamNames: string[]) => void;
 }
 
 const QuizSetup: React.FC<QuizSetupProps> = ({ onSetup }) => {
-  const [quizName, setQuizName] = useState('');
+  const [quizName, setQuizName] = useState("");
   const [teamCount, setTeamCount] = useState<number>(2);
-  const [teamNames, setTeamNames] = useState<string[]>(['', '']);
+  const [teamNames, setTeamNames] = useState<string[]>(["", ""]);
 
   const handleTeamCountChange = (count: number) => {
     setTeamCount(count);
-    setTeamNames(new Array(count).fill(''));
+    setTeamNames(new Array(count).fill(""));
   };
 
   const handleSubmit = () => {
@@ -20,7 +20,7 @@ const QuizSetup: React.FC<QuizSetupProps> = ({ onSetup }) => {
   };
 
   return (
-    <Box>
+    <Box sx={{ alignItems: "center" }}>
       <Typography variant="h5">Quiz Setup</Typography>
       <TextField
         label="Quiz Name"
